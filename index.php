@@ -20,7 +20,19 @@ $book = ['id_book'=>1,
          'author'=>'Petrosyan',
          'price'=>1590,
          'description'=>'описание жизни одного человека'];
-$menu = ['index.php', 'delivery.php', 'sign.php', 'contacts.php', 'basket.php'];
+$books = [];
+$books[0] = $book;
+$books[1] =['id_book'=>2,
+    'title'=>'magic book',
+    'author'=>'Merlin',
+    'price'=>2590,
+    'description'=>'рецепты магической кухни'];
+$menu = ['index'=>'главная',
+    'delivery'=>'доставка',
+    'sign'=>'вход',
+    'contacts'=>'контакты',
+    'basket'=>'корзина',
+    'dorpdown'=>'dropdown'];
 
 $page = 'index';
 ?>
@@ -71,20 +83,20 @@ $page = 'index';
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="delivery.html">Доставка</a>
+        <a class="nav-link" href="?page=delivery"><?php echo $menu['delivery']; ?></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="contacts.html">Контакты</a>
+        <a class="nav-link" href="?page=contacts"><?php echo $menu['contacts']; ?></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="login.html">Войти</a>
+        <a class="nav-link" href="?page=sign"><?php echo $menu['sign']; ?></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="basket.html">Корзина</a>
+        <a class="nav-link" href="?page=basket"><?php echo $menu['basket']; ?></a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
+          <?php echo $menu['dorpdown']; ?>
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="#">Action</a>

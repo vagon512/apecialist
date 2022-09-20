@@ -1,3 +1,20 @@
+<?php
+$summa = 0;
+$i = 0;
+$i++;
+echo $i < 10;
+
+$order = "Имя:".$firstName.", фамилия: ". $lastName. ", email: ". $email. ", адрес: ". $address. "<br>";
+$query = "INSERT INTO book VALUES (NULL, 'автор', 'название', 123, 'описание', 'категория')";
+
+$num = rand(101, 999);
+$res = $num % 100;
+echo "<br>".$res."<br>";
+echo $res < 5 || $res > 20;
+echo $num % 10 == 1;
+
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
