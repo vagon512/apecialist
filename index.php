@@ -29,7 +29,22 @@ $menu = ['index'=>'главная',
     'basket'=>'корзина',
     'dorpdown'=>'dropdown'];
 
-$page = 'index';
+$page = $_GET['page'];
+
+switch($page){
+    case 'index': $pageName = "Каталог товаров";
+    break;
+    case 'delivery': $pageName = "ДОствака заказа";
+    break;
+    case 'sign': $pageName = "Вход";
+    break;
+    case 'contacts': $pageName = "Контакты";
+    break;
+    case 'basket': $pageName = "Корзина";
+    break;
+    default: $pageName = "Каталог товаров";
+    break;
+}
 ?>
 
 <!doctype html>
@@ -120,15 +135,17 @@ $page = 'index';
           echo "категорий нет";
   }
       else{
+          $i = 0;
+          while($i < count($categories)){
 
       ?>
-    <a class="dropdown-item" href="#"><?php echo $categories[0]; ?></a>
-    <a class="dropdown-item" href="#"><?php echo $categories[1]; ?></a>
-    <a class="dropdown-item" href="#"><?php echo $categories[2]; ?></a>
-    <a class="dropdown-item" href="#"><?php echo $categories[3]; ?></a>
-    <a class="dropdown-item" href="#"><?php echo $categories[4]; ?></a>
+    <a class="dropdown-item" href="#"><?php echo $categories[$i]; ?></a>
 
-      <?php } ?>
+      <?php
+          $i++;
+          }
+      }
+      ?>
       <!--    <a class="dropdown-item" href="#">Something else here</a>-->
 <!--    <a class="dropdown-item" href="#">Action</a>-->
 <!--    <a class="dropdown-item" href="#">Another action</a>-->
@@ -157,29 +174,18 @@ $page = 'index';
 
   <div class="row">
       <?php
-      if(!count($publisher)){
+      //echo "<h1>".count($publisher)."</h1>";
+      if(count($publisher)){
+
       ?>
   <ul class="list-group col-md-12 col-sm-12">
-    <li class="list-group-item">
+    <?php for($i = 0; $i < count($publisher); $i++){ ?>
+      <li class="list-group-item">
       <input type="checkbox"   id="exampleCheck1">
-      <label class="form-check-label" for="exampleCheck1"><?php echo $publisher[0];?></label>
+      <label class="form-check-label" for="exampleCheck1"><?php echo $publisher[$i];?></label>
     </li>
-    <li class="list-group-item">
-      <input type="checkbox" id="exampleCheck2">
-      <label class="form-check-label" for="exampleCheck2"><?php echo $publisher[1];?></label>
-    </li>
-    <li class="list-group-item">
-      <input type="checkbox" id="exampleCheck3">
-      <label class="form-check-label" for="exampleCheck3"><?php echo $publisher[2];?></label>
-    </li>
-      <li class="list-group-item">
-          <input type="checkbox" id="exampleCheck3">
-          <label class="form-check-label" for="exampleCheck3"><?php echo $publisher[3];?></label>
-      </li>
-      <li class="list-group-item">
-          <input type="checkbox" id="exampleCheck3">
-          <label class="form-check-label" for="exampleCheck3"><?php echo $publisher[4];?></label>
-      </li>
+      <?php } ?>
+    
     <li class="list-group-item">
       <button type="button" class="btn btn-success">Найти</button>    
     </li>
@@ -193,7 +199,7 @@ $page = 'index';
 </div>
 
 <div class="col-md-9 col-sm-9 ">
-  <h1>Каталог</h1>
+  <h1><?= $pageName; ?></h1>
 
   <div class="card-deck"> 
       <div class="card">        
