@@ -1,10 +1,5 @@
 <?php
-define('AUTHOR', "vagon512");
-define('YEAR', 2022);
-define('DBNAME', 'specialist');
-define('DBUSER', 'vagon');
-define('DBPASSWD', '1');
-define('DBHOST', 'localhost');
+include "inc/config.php";
 
 $firstName = "Ivan";
 $lastName = "Ivanov";
@@ -117,14 +112,24 @@ $page = 'index';
 <div class="col-md-3 col-sm-3 ">
         
   <h4>Категория</h4>
-  
+
   <div class="row">
+      <?php
+
+      if(!count($categories)){
+          echo "категорий нет";
+  }
+      else{
+
+      ?>
     <a class="dropdown-item" href="#"><?php echo $categories[0]; ?></a>
     <a class="dropdown-item" href="#"><?php echo $categories[1]; ?></a>
     <a class="dropdown-item" href="#"><?php echo $categories[2]; ?></a>
     <a class="dropdown-item" href="#"><?php echo $categories[3]; ?></a>
     <a class="dropdown-item" href="#"><?php echo $categories[4]; ?></a>
-<!--    <a class="dropdown-item" href="#">Something else here</a>-->
+
+      <?php } ?>
+      <!--    <a class="dropdown-item" href="#">Something else here</a>-->
 <!--    <a class="dropdown-item" href="#">Action</a>-->
 <!--    <a class="dropdown-item" href="#">Another action</a>-->
 <!--    <a class="dropdown-item" href="#">Something else here</a>-->
@@ -151,6 +156,9 @@ $page = 'index';
   <h4>Издательство</h4>
 
   <div class="row">
+      <?php
+      if(!count($publisher)){
+      ?>
   <ul class="list-group col-md-12 col-sm-12">
     <li class="list-group-item">
       <input type="checkbox"   id="exampleCheck1">
@@ -176,6 +184,7 @@ $page = 'index';
       <button type="button" class="btn btn-success">Найти</button>    
     </li>
   </ul>
+      <?php } else{ echo "издательств нет"; } ?>
 
   </div>
  <hr>
@@ -282,17 +291,12 @@ $page = 'index';
 
   </div><!-- /.container -->
 
-  <footer class="footer">
-    <div class="container">
-      <span class="text-muted"><?php echo AUTHOR, "<br>", YEAR?> &copy; Интернет-магазин Книжка</span>
-    </div>
-  </footer>
+      <?php
+      include "inc/footer.php";
+      ?>
 
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-  </body>
+   </body>
 </html>

@@ -1,10 +1,4 @@
 <?php
-define('AUTHOR', "L.N. Tolstoy");
-define('YEAR', 2022);
-define('DBNAME', 'specialist');
-define('DBUSER', 'vagon');
-define('DBPASSWD', '1');
-define('DBHOST', 'localhost');
 
 $firstName = "Ivan";
 $lastName = "Ivanov";
