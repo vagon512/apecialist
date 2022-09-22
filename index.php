@@ -1,10 +1,11 @@
 <?php
 include "inc/config.php";
+include_once  "inc/lib.php";
 
-$firstName = "Ivan";
-$lastName = "Ivanov";
-$email = 'i.ivanov@test.ru';
-$address = 'Rostov-on-Don, Nagibina st. 51';
+$firstName = delTags("Ivan");
+$lastName = delTags("Ivanov");
+$email = delTags('i.ivanov@test.ru');
+$address = delTags('Rostov-on-Don, Nagibina st. 51');
 $succesOrder = "order for $firstName delivery address: $address";
 
 $categories = ['fantastic', 'prose', 'fantasy', 'triller', 'poesia'];
@@ -55,6 +56,8 @@ $menu = ['index'=>'главная',
     'dorpdown'=>'dropdown'];
 
 $page = $_GET['page'];
+
+saveOrder($firstName, $lastName, $email, $address);
 
 switch($page){
     case 'index': $pageName = "Каталог товаров";
@@ -116,27 +119,9 @@ switch($page){
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-        <?php
-        foreach($menu as $key=>$value){
-        ?>
-      <li class="nav-item active">
-        <a class="nav-link" href="?page=<?php echo $key; ?>"><?php echo $value; ?></a>
-      </li>
-      <?php } ?>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <?php echo $menu['dorpdown']; ?>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-    </ul>
-
+      <?php
+      getMenu('templates/menu', $menu);
+      ?>
   </div>
   </div>
 </nav>
@@ -146,31 +131,17 @@ switch($page){
 <div class="row">
 <div class="col-md-3 col-sm-3 ">
         
-  <h4>Категория</h4>
-
-  <div class="row">
-      <?php
-
-      if(!count($categories)){
-          echo "категорий нет";
-  }
-      else{
-          $i = 0;
-          while($i < count($categories)){
-
-      ?>
-    <a class="dropdown-item" href="#"><?php echo $categories[$i]; ?></a>
 
       <?php
-          $i++;
-          }
-      }
+      getCategories("templates/categories", $categories);
       ?>
+
+
       <!--    <a class="dropdown-item" href="#">Something else here</a>-->
 <!--    <a class="dropdown-item" href="#">Action</a>-->
 <!--    <a class="dropdown-item" href="#">Another action</a>-->
 <!--    <a class="dropdown-item" href="#">Something else here</a>-->
-  </div>
+
  <hr>
          
  <h4>Цена</h4>
@@ -190,32 +161,11 @@ switch($page){
   </div>
   </div>
  <hr>  
-  <h4>Издательство</h4>
-
-  <div class="row">
       <?php
       //echo "<h1>".count($publisher)."</h1>";
-      if(count($publisher)){
+      getPublisher("templates/publisher",$publisher);
+       ?>
 
-      ?>
-  <ul class="list-group col-md-12 col-sm-12">
-    <?php for($i = 0; $i < count($publisher); $i++){ ?>
-      <li class="list-group-item">
-      <input type="checkbox"   id="exampleCheck1">
-      <label class="form-check-label" for="exampleCheck1"><?php echo $publisher[$i];?></label>
-    </li>
-      <?php } ?>
-
-    <li class="list-group-item">
-      <button type="button" class="btn btn-success">Найти</button>    
-    </li>
-  </ul>
-      <?php } else{ echo "издательств нет"; } ?>
-
-  </div>
- <hr>
-
- 
 </div>
 
 <div class="col-md-9 col-sm-9 ">

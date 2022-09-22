@@ -5,3 +5,5 @@ define('DBNAME', 'specialist');
 define('DBUSER', 'vagon');
 define('DBPASSWD', '1');
 define('DBHOST', 'localhost');
+
+define('ORDERS', 'orders.txt');
