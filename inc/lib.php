@@ -1,4 +1,5 @@
 <?php
+
 function getCategories($template, array $categories)
 {
     include "$template.php";
@@ -14,7 +15,7 @@ function getMenu($template, $menu){
 }
 
 function saveOrder($firstName, $lastName, $email, $address){
-    file_put_contents(ORDER, "$firstName| $lastName| $email| $address\n", FILE_APPEND)  ;
+    file_put_contents(ORDERS, "$firstName| $lastName| $email| $address\n", FILE_APPEND)  ;
     return true;
 }
 

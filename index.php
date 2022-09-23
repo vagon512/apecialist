@@ -1,12 +1,35 @@
 <?php
-include "inc/config.php";
+include_once "inc/config.php";
 include_once  "inc/lib.php";
+ob_start();
 
-$firstName = delTags("Ivan");
-$lastName = delTags("Ivanov");
-$email = delTags('i.ivanov@test.ru');
-$address = delTags('Rostov-on-Don, Nagibina st. 51');
-$succesOrder = "order for $firstName delivery address: $address";
+if(!empty($_GET['add2basket'])){
+    $add2basket = $_GET['add2basket'];
+    if(array_key_exists($add2basket, $_SESSION['basket'])){
+        $_SESSION['basket'][$add2basket]++;
+    }
+    else{
+        $_SESSION['basket'][$add2basket] = 1;
+    }
+
+}
+
+if(!empty($_GET['delete'])){
+    $delete = $_GET['delete'];
+    if(array_key_exists($delete, $_SESSION['basket'])){
+        unset($_SESSION['basket'][$delete]);
+        header('location: ?page=basket');
+    }
+}
+//echo "<pre>";
+//print_r($_SESSION['basket']);
+//echo "</pre>";
+
+//$firstName = delTags("Ivan");
+//$lastName = delTags("Ivanov");
+//$email = delTags('i.ivanov@test.ru');
+//$address = delTags('Rostov-on-Don, Nagibina st. 51');
+//$succesOrder = "order for $firstName delivery address: $address";
 
 $categories = ['fantastic', 'prose', 'fantasy', 'triller', 'poesia'];
 $publisher = ['эксмо', 'первый издательский дом', 'белая бумага', 'моя книга', 'большой миф'];
@@ -55,9 +78,8 @@ $menu = ['index'=>'главная',
     'basket'=>'корзина',
     'dorpdown'=>'dropdown'];
 
-$page = $_GET['page'];
+$page = !empty($_GET['page']) ? $_GET['page'] : 'index' ;
 
-saveOrder($firstName, $lastName, $email, $address);
 
 switch($page){
     case 'index': $pageName = "Каталог товаров";
@@ -77,7 +99,7 @@ switch($page){
 
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -91,139 +113,54 @@ switch($page){
     <title>PHP часть 1. Основы PHP</title>
 
     <style>
-    .card-deck{
-      margin-top: 20px      
-    }
+        .card-deck{
+            margin-top: 20px
+        }
 
-    .card-body img{
-      display: block;
-      margin: 0 auto 15px;
+        .card-body img{
+            display: block;
+            margin: 0 auto 15px;
 
-    }
-    .card-footer{
-      background: transparent;
-      border: 0;
-    }
+        }
+        .card-footer{
+            background: transparent;
+            border: 0;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
 
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container">
-  <a class="navbar-brand" href="/">Интернет-магазин Книжка</a>    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="книгу.." aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Найти!</button>
-    </form>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="/">Интернет-магазин Книжка</a>    <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="книгу.." aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Найти!</button>
+        </form>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <?php
-      getMenu('templates/menu', $menu);
-      ?>
-  </div>
-  </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <?php
+            getMenu('templates/menu', $menu);
+            ?>
+        </div>
+    </div>
 </nav>
 
 <div class="container">
+<?php if($page == 'index'){
+    include "inc/leftpart.php";
 
-<div class="row">
-<div class="col-md-3 col-sm-3 ">
-        
-
-      <?php
-      getCategories("templates/categories", $categories);
-      ?>
-
-
-      <!--    <a class="dropdown-item" href="#">Something else here</a>-->
-<!--    <a class="dropdown-item" href="#">Action</a>-->
-<!--    <a class="dropdown-item" href="#">Another action</a>-->
-<!--    <a class="dropdown-item" href="#">Something else here</a>-->
-
- <hr>
-         
- <h4>Цена</h4>
-  
-  <div class="row">
-    <div class="input-group mb-1">
-    <div class="input-group-prepend">
-      <span class="input-group-text" id="inputGroup-sizing-default">от</span>
-    </div>
-    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"> &nbsp;
-    <div class="input-group-prepend">
-      <span class="input-group-text" id="inputGroup-sizing-sm">до</span>
-    </div>
-    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">&nbsp;
-
-    <button type="button" class="btn btn-success">Найти</button>    
-  </div>
-  </div>
- <hr>  
-      <?php
-      //echo "<h1>".count($publisher)."</h1>";
-      getPublisher("templates/publisher",$publisher);
-       ?>
-
-</div>
-
-<div class="col-md-9 col-sm-9 ">
-  <h1><?= $pageName; ?></h1>
-<?php
-$bookCounter = ceil(count($books)/3)*3;
-for($i = 0; $i < $bookCounter; $i += 3){
-?>
-  <div class="card-deck">
-      <?php
-      for($j = $i; $j < $i+3; $j++){
-          if(isset($books[$j])){
-      ?>
-      <div class="card">        
-        <div class="card-body">
-          <img src="http://placehold.it/150x220"  alt="...">
-          <h3 class="card-title"><?php echo $books[$j]['price']; ?>руб</h3>
-          <p class="card-text"><small class="text-muted">Автор: <?php echo $books[$j]['author'];?></small></p>
-            <p class="card-text"><small class="text-muted">Название: <?php echo $books[$j]['title'];?></small></p>
-          <p class="card-text"><?php echo $books[$j]['description']; ?>. Издательство: <a href="#">Полезное</a></p>
-        </div>
-          <div class="card-footer">
-              <!--          <button type="button" class="btn btn-primary">В корзину</button>-->
-              <a href="?add2basket=<?php echo $books[$j]['id_book']; ?>">В корзину</a>
-          </div>
-
-       </div>
-      <?php }
-          else{
-              ?>
-              <div class="card">
-                  <div class="card-body">
-                      <img src="http://placehold.it/150x220"  alt="...">
-                      <h3 class="card-title"></h3>
-                      <p class="card-text"><small class="text-muted">Автор</small></p>
-                      <p class="card-text"><small class="text-muted">Название: </small></p>
-                      <p class="card-text">. Издательство: <a href="#">Полезное</a></p>
-                  </div>
-
-              </div>
-      <?php
-          }
-      }?>
-
-
-  </div>
-    <?php
 }
 ?>
-
-</div>
-
-<div class="container">
-     
-
-  </div><!-- /.container -->
+    <div class="col-md-9 col-sm-9 ">
+        <h1><?php echo $pageName; ?></h1>
 
       <?php
+      if(file_exists("inc/$page.php")){
+          include "inc/$page.php";
+      }
       include "inc/footer.php";
       ?>
 
