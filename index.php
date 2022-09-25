@@ -2,6 +2,40 @@
 include_once "inc/config.php";
 include_once  "inc/lib.php";
 ob_start();
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])){
+    $login   = delTags($_POST['login']);
+    $passwd  = md5(delTags($_POST['passwd']));
+//echo $login, "<hr>", $passwd, "<hr>";
+    if( $login == ADMIN && $passwd == md5(ADMIN_PASSWD)){
+        $_SESSION['admin'] = 1;
+        header('location:/?page=addbook');
+    }
+    else{
+        echo "<h3>Неверный логин или пароль</h3>";
+    }
+}
+
+$numPage = getParam('numpage')*1;
+$search = getParam('search');
+$query = "SELECT * FROM book ";
+if($search){
+    $query .= " WHERE author LIKE '$search%' ";
+}
+$query .= " LIMIT ". ($numPage * ITEMS_PER_PAGE).",".ITEMS_PER_PAGE ;
+
+$result = mysqli_query($db, $query);
+if(!mysqli_errno($db)){
+    $books = mysqli_fetch_all($result, MYSQLI_ASSOC );
+}
+
+//для логина
+if($_GET['page'] == 'logout'){
+   session_regenerate_id();
+   session_destroy();
+   unset($_SESSION['admin']);
+   header('location:/?page=index');
+
+}
 
 if(!empty($_GET['add2basket'])){
     $add2basket = $_GET['add2basket'];
@@ -11,7 +45,7 @@ if(!empty($_GET['add2basket'])){
     else{
         $_SESSION['basket'][$add2basket] = 1;
     }
-
+    header('location:/?page=index');
 }
 
 if(!empty($_GET['delete'])){
@@ -39,59 +73,66 @@ $book = ['id_book'=>1,
          'author'=>'Petrosyan',
          'price'=>1590,
          'description'=>'описание жизни одного человека'];
-$books = [];
-$books[0] = $book;
-$books[] =['id_book'=>2,
-    'title'=>'magic book',
-    'author'=>'Merlin',
-    'price'=>2590,
-    'description'=>'рецепты магической кухни'];
-
-$books[] =['id_book'=>3,
-    'title'=>'my weapon book',
-    'author'=>'J. Rambo',
-    'price'=>2790,
-    'description'=>'Любимое оружие Рэмбы :)'];
-
-$books[] =['id_book'=>4,
-    'title'=>'fire in the sky',
-    'author'=>'C. Douglas',
-    'price'=>1890,
-    'description'=>'воздушные бои в небе над Британией'];
-
-$books[] =['id_book'=>5,
-    'title'=>'Deep blue sea',
-    'author'=>'Poseidon',
-    'price'=>2590,
-    'description'=>'Акулы всех сожрали'];
-
-$books[] =['id_book'=>6,
-    'title'=>'Jasmin`s dreams',
-    'author'=>'L.Freeman',
-    'price'=>2590,
-    'description'=>'О любви, мечтах и горькой реальности'];
+//$books = [];
+//$books[0] = $book;
+//$books[] =['id_book'=>2,
+//    'title'=>'magic book',
+//    'author'=>'Merlin',
+//    'price'=>2590,
+//    'description'=>'рецепты магической кухни'];
+//
+//$books[] =['id_book'=>3,
+//    'title'=>'my weapon book',
+//    'author'=>'J. Rambo',
+//    'price'=>2790,
+//    'description'=>'Любимое оружие Рэмбы :)'];
+//
+//$books[] =['id_book'=>4,
+//    'title'=>'fire in the sky',
+//    'author'=>'C. Douglas',
+//    'price'=>1890,
+//    'description'=>'воздушные бои в небе над Британией'];
+//
+//$books[] =['id_book'=>5,
+//    'title'=>'Deep blue sea',
+//    'author'=>'Poseidon',
+//    'price'=>2590,
+//    'description'=>'Акулы всех сожрали'];
+//
+//$books[] =['id_book'=>6,
+//    'title'=>'Jasmin`s dreams',
+//    'author'=>'L.Freeman',
+//    'price'=>2590,
+//    'description'=>'О любви, мечтах и горькой реальности'];
 
 $menu = ['index'=>'главная',
     'delivery'=>'доставка',
-    'sign'=>'вход',
     'contacts'=>'контакты',
     'basket'=>'корзина',
-    'dorpdown'=>'dropdown'];
+    'dorpdown'=>'dropdown',
+    'login'=>'вход',];
 
-$page = !empty($_GET['page']) ? $_GET['page'] : 'index' ;
+if($_SESSION['admin']){
+    $menu['logout'] = "Выход";
+    unset($menu['login']);
+}
 
+//$page = !empty($_GET['page']) ? $_GET['page'] : 'index' ;
+$page = getParam('page') ? getParam('page') : 'index';
 
 switch($page){
     case 'index': $pageName = "Каталог товаров";
     break;
     case 'delivery': $pageName = "ДОствака заказа";
     break;
-    case 'sign': $pageName = "Вход";
+    case 'login': $pageName = "Вход";
     break;
     case 'contacts': $pageName = "Контакты";
     break;
     case 'basket': $pageName = "Корзина";
     break;
+    case 'addbook': $pageName = "ДОбавление книги";
+        break;
     default: $pageName = "Каталог товаров";
     break;
 }
@@ -132,8 +173,9 @@ switch($page){
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-        <a class="navbar-brand" href="/">Интернет-магазин Книжка</a>    <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="книгу.." aria-label="Search">
+        <a class="navbar-brand" href="/">Интернет-магазин Книжка</a>
+        <form class="form-inline my-2 my-lg-0" method="get">
+            <input class="form-control mr-sm-2" name="search" type="search" placeholder="книгу.." aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Найти!</button>
         </form>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -154,8 +196,6 @@ switch($page){
 
 }
 ?>
-    <div class="col-md-9 col-sm-9 ">
-        <h1><?php echo $pageName; ?></h1>
 
       <?php
       if(file_exists("inc/$page.php")){

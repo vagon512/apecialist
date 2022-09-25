@@ -1,3 +1,35 @@
+<div class="col-md-9 col-sm-9 ">
+    <h1><?php echo $pageName; ?></h1>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <?php
+            $query = "SELECT count(*) FROM book";
+            $result = mysqli_query($db, $query);
+            $countOfPage = ceil(mysqli_fetch_row($result)[0]/ITEMS_PER_PAGE);
+
+            if($countOfPage > 1){
+
+                for($i=0; $i < $countOfPage; $i++){
+                    if(getParam('numpage') == $i){ ?>
+
+                        <li class="page-item active"><a class="page-link" href="/?page=<?= $page ?>&numpage=<?= $i ?><?php echo isset($search) ? "&search=".$search : ""; ?>"><?= $i+1 ?></a></li>
+                        <?php
+                    }
+                    else{
+                        ?>
+
+                        <li class="page-item"><a class="page-link" href="/?page=<?= $page ?>&numpage=<?= $i ?><?php echo isset($search) ? "&search=".$search : ""; ?>"><?= $i+1 ?></a></li>
+
+                        <?php
+                    }
+                }
+            }
+//            echo isset($search) ? "&search=".$search : "nothing";
+            ?>
+        </ul>
+    </nav>
+
+
 
 
         <?php

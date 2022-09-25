@@ -18,7 +18,10 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
     $email       = delTags($_POST['email']);
     $address     = delTags($_POST['address']);
     $query = "INSERT INTO book VALUES (NULL, 'автор', 'название', 123, 'описание', 'категория')";
+
     saveOrder($firstName, $lastName, $email, $address);
+    //по заданию нужно очистить сессионную переменную
+    unset($_SESSION['basket']);
 }
 
 $count = 0;
@@ -51,7 +54,7 @@ foreach($_SESSION['basket'] as $value){
                       $name          = $books[$i]['title'];
                       $description   = $books[$i]['description'];
                       $price         = $books[$i]['price'];
-                      $summa += $price * $value;
+                      $summa        += $price * $value;
                   }
               }
               ?>

@@ -38,3 +38,25 @@ function calcAmount( $delta = 0){
     static $cost = 0;
     return $cost += $delta;
 }
+
+//получение параметров запроса get
+function getParam(string $param = '') :? string{
+    return filter_input(INPUT_GET, $param, FILTER_SANITIZE_STRING) ?? null;
+    //if(isset($_GET['$param'])){
+
+
+//        return delTags($_GET['param']) ;
+//        return filter_input(INPUT_GET, $param, FILTER_SANITIZE_STRING);
+//    }
+//    return null;
+
+}
+//получение параметров запроса post
+function postParam(string $param = '') :? string{
+    return filter_input(INPUT_POST, $param, FILTER_SANITIZE_STRING) ?? null;
+//    if(isset($_POST['$param'])){
+//        return delTags($_POST['param']) ;
+//        return filter_input(INPUT_POST, $param, FILTER_SANITIZE_STRING);
+//    }
+//    return null;
+}
